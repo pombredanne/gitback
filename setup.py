@@ -1,13 +1,11 @@
 from setuptools import setup, find_packages
-import sys, os
 
 version = '0.0'
 
 setup(name='gitback',
       version=version,
       description="Backing up git repositories and using git for backups",
-      long_description="""\
-""",
+      long_description=open('README.txt').read(),
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='',
       author='Ross Patterson',
