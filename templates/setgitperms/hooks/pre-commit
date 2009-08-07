@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Record file metadata
+SUBDIRECTORY_OK=1 . git-sh-setup
+$GIT_DIR/hooks/setgitperms.perl -r
+
+# Add new files, obeys ignored files
+git-add -v .

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Restore file metadata
+SUBDIRECTORY_OK=1 . git-sh-setup
+$GIT_DIR/hooks/setgitperms.perl -w
