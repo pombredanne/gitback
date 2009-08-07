@@ -1,10 +1,4 @@
 #!/bin/sh
 
 # Restore file metadata
-if [[ $(which ometastore) ]]
-then
-    ometastore -v -x -a -i
-else
-    # Fallback to git/contrib/hooks/setgitperms.perl
-    SUBDIRECTORY_OK=1 . git-sh-setup
-    $GIT_DIR/hooks/setgitperms.perl -w
+ometastore -v -x -a -i

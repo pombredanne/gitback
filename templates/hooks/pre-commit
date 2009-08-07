@@ -1,13 +1,7 @@
 #!/bin/sh
 
 # Record file metadata
-if [[ $(which ometastore) ]]
-then
-    ometastore -x -s -i --sort
-    git add -f .ometastore
-else
-    SUBDIRECTORY_OK=1 . git-sh-setup
-    $GIT_DIR/hooks/setgitperms.perl -r
+ometastore -x -s -i --sort
 
 # Add new files, obeys ignored files
 git-add -v .
