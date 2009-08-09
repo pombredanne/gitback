@@ -1,0 +1,5 @@
+Automated Backups: This git repository has been initialized from a
+template that supports automated operation as a backup.  Files that
+aren't ignored will be added automatically on commit.  File metadata
+will be automatically recorded on commit and restored on checkout or
+merge using rpatterson.filemetadata.
