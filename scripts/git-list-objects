@@ -2,19 +2,21 @@
 #
 # Copyright (c) 2009 Ross Patterson
 
-USAGE='type [--unpacked] <git-rev-list args>...'
+USAGE='[--unpacked] <git-rev-list args>... <type...'
 LONG_USAGE='List SHA1 hashes for objects of the given in the object store.'
 SUBDIRECTORY_OK=Yes
 . $(git --exec-path)/git-sh-setup
 
-type=$1
-shift
+read types
 
 for rev in $(
     git rev-list --objects "$@" |
     grep -o '^[[:alnum:]]\{40\}' )
 do
-    if [[ $(git cat-file -t $rev) == $type ]]
-    then echo $rev
-    fi
+    for type in $types
+    do
+        if [[ $(git cat-file -t $rev) == $type ]]
+        then echo $rev
+        fi
+    done
 done

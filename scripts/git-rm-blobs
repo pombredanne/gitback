@@ -27,7 +27,8 @@ revlist="$@"
 ## may be worth it.  Otherwise just the the blob moving approach.
 
 ## Use a pack to move objects to the alternate store
-git list-objects blob --unpacked $revlist | git pack-objects blobs
+echo blob | git list-objects --unpacked $revlist |
+git pack-objects blobs
 ## Move the pack to the alternate object store
 pack=$(ls -d blobs-????????????????????????????????????????.pack)
 hash=${pack:6:40}
