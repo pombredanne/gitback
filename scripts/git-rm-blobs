@@ -38,6 +38,7 @@ revlist="$@"
 # mv $pack blobs-$hash.idx $GIT_DIR/archive/pack/
 
 ## Manually move objects to the alternate store
+echo >&2 Moving blobs...
 blobs=$( echo blob | git list-objects --unpacked $revlist )
 for blob in $blobs
 do
@@ -47,7 +48,8 @@ done
 
 ## Manually pack the other objects since removing the blobs breaks
 ## "git repack"
-echo tree commit tag | git list-objects --unpacked master |
+echo >&2 Packing tees, commits, and tags...
+echo tree commit tag | git list-objects --unpacked $revlist |
 git pack-objects pack &&
 mv pack-*.pack pack-*.idx $GIT_OBJECT_DIRECTORY/pack/
 
