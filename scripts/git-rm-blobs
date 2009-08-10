@@ -16,7 +16,7 @@ SUBDIRECTORY_OK=Yes
 . $(git --exec-path)/git-sh-setup
 require_work_tree
 
-$revlist = $"@"
+revlist=$"@"
 
 ## Remove the blobs from the local store
 ## Two implementations here.  One uses packs and leaves the pack index
@@ -34,7 +34,7 @@ $revlist = $"@"
 # mv $pack blobs-$hash.idx .git/archive/pack/
 
 ## Manually move objects to the alternate store
-$blobs = $(git-get-blobs --unpacked $revlist)
+blobs=$(git-get-blobs --unpacked $revlist)
 for blob in $(git-get-blobs --unpacked $revlist)
 do
     mkdir -p .git/archive/${blob:0:2}

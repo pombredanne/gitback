@@ -9,14 +9,14 @@ SUBDIRECTORY_OK=Yes
 . $(git --exec-path)/git-sh-setup
 
 require_work_tree
-$TAG = archived
+TAG=archived
 set_reflog_action "$TAG"
 
-$revlist = $TAG..master
+revlist=$TAG..master
 ## If I want to take an arg
-# $revlist = $1
+# revlist=$1
 
-pipeline =  $( git config --get gitback.pipeline )
+pipeline= $( git config --get gitback.pipeline )
 
 ## Create the bundle since the last archving
 git bundle create -- $revlist |
