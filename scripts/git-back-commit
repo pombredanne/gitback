@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Copyright (c) 2009 Ross Patterson
+
+USAGE='< changelog'
+LONG_USAGE='Commit the tree in the index without performing object \
+checks'
+SUBDIRECTORY_OK=Yes
+. $(git --exec-path)/git-sh-setup
+
+require_work_tree
+
+read
+hash=$(echo $REPLY |   
+    git commit-tree $(git write-tree --missing-ok) -p $(
+        git rev-parse HEAD))
+
+git update-ref HEAD $hash
+git checkout HEAD
+
+echo $hash

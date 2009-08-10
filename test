@@ -26,12 +26,12 @@ do
     fi
 done
 
-for i in $( seq 3 )
+for i in $( seq 4 )
 do
-    echo bar-$i >> foo.txt && git add . && git commit -m "Add line $i" &&
+    dd if=/dev/zero count=8 of=bar-$i.txt && git add . && echo "Add file $i" | git back-commit &&
     git back || exit 1
 
-    objs=$( git list-unpacked commit tree blob )
+    objs=$( git list-unpacked back-commit tree blob )
     if [[ -n $objs ]]
     then
         echo Remaining objs: $objs
@@ -63,3 +63,4 @@ do
 done
 
 cat foo.txt
+ls -l bar-?.txt
