@@ -44,8 +44,7 @@ done
 ## indeed faster.
 
 ## Use a pack to move objects to the alternate store
-# echo blob | git list-objects --unpacked $revlist |
-# git pack-objects blobs
+# git list-unpacked blob | git pack-objects blobs
 ## Move the pack to the alternate object store
 # pack=$(ls -d blobs-????????????????????????????????????????.pack)
 # hash=${pack:6:40}
@@ -54,7 +53,7 @@ done
 
 ## Manually move objects to the alternate store
 echo >&2 Moving blobs...
-blobs=$( echo blob | git list-objects --unpacked $revlist )
+blobs=$( git list-unpacked blob )
 for blob in $blobs
 do
     mkdir -p $GIT_DIR/archive/${blob:0:2}
@@ -64,8 +63,7 @@ done
 ## Manually pack the other objects since removing the blobs breaks
 ## "git repack"
 echo >&2 Packing trees, commits, and tags...
-echo tree commit tag | git list-objects --unpacked master |
-git pack-objects pack &&
+git list-unpacked tree commit tag | git pack-objects pack &&
 mv pack-*.pack pack-*.idx $GIT_OBJECT_DIRECTORY/pack/
 
 ## remove the objects form the local store

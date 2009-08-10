@@ -9,7 +9,7 @@ git init --template=/home/xen/src/gitback/templates/rpatterson-filemetadata/ &&
 echo foo > foo.txt && git add . && git commit -m "Add a file" &&
 git rm-blobs master || exit 1
 
-objs=$(echo commit tree blob | git list-objects --unpacked)
+objs=$( git list-unpacked commit tree blob )
 if [[ -n $objs ]]
 then
     echo Remaining objs: $objs
@@ -30,7 +30,7 @@ do
     echo bar-$i >> foo.txt && git add . && git commit -m "Add line $i" &&
     git rm-blobs master^..master || exit 1
 
-    objs=$(echo commit tree blob | git list-objects --unpacked)
+    objs=$( git list-unpacked commit tree blob )
     if [[ -n $objs ]]
     then
         echo Remaining objs: $objs

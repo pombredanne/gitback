@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Copyright (c) 2009 Ross Patterson
+
+USAGE='type...'
+LONG_USAGE='List SHA1 hashes for unpacked objects of the given type.'
+SUBDIRECTORY_OK=Yes
+. $(git --exec-path)/git-sh-setup
+
+for obj in $GIT_OBJECT_DIRECTORY/??/??????????????????????????????????????
+do
+    if [[ -f $obj ]]
+    then
+        hash=${obj: -41}
+        hash=${hash/\//}
+
+        for type in "$@"
+        do
+            if [[ $(git cat-file -t $hash) == $type ]]
+            then echo $hash
+            fi
+        done
+    fi
+done
