@@ -25,6 +25,8 @@ revlist="$@"
 ## the pack away, the pack approach involes some wasted time.  But if
 ## git can make some use of the pack index without the pack, then it
 ## may be worth it.  Otherwise just the the blob moving approach.
+## I did a quick "time test" and it seems like the move approach is
+## indeed faster.
 
 ## Use a pack to move objects to the alternate store
 # echo blob | git list-objects --unpacked $revlist |
