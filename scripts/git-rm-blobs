@@ -38,14 +38,11 @@ blobs=$(git-get-blobs --unpacked $revlist)
 for blob in $blobs
 do
     mkdir -p $GIT_DIR/archive/${blob:0:2}
-    mv $GIT_DIR/objects/${blob:0:2}/${blob:2:38} $GIT_DIR/archive/${blob:0:2}/
-    ## XXX should check if empty dirs left in $GIT_DIR/objects are removed
-    ## by "git gc"
+    mv $GIT_OBJECT_DIRECTORY/${blob:0:2}/${blob:2:38} $GIT_DIR/archive/${blob:0:2}/
 done
 
-## Pack the main object store to remove the objects in the pack form
-## the local store
-git gc || ( die "Garbage collection failed" )
+## remove the objects form the local store
+git gc --auto || ( die "Garbage collection failed" )
 
 ## Remove the pack but leave the index
 # rm -f $GIT_DIR/archive/pack/$pack
