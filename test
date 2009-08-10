@@ -6,8 +6,9 @@ mkdir foo &&
 cd foo &&
 
 git init --template=/home/xen/src/gitback/templates/rpatterson-filemetadata/ &&
+git config --replace-all gitback.pipeline 'cat >../foo-$(git rev-parse HEAD).bundle'
 echo foo > foo.txt && git add . && git commit -m "Add a file" &&
-git rm-blobs master || exit 1
+git back || exit 1
 
 objs=$( git list-unpacked commit tree blob )
 if [[ -n $objs ]]
@@ -25,10 +26,10 @@ do
     fi
 done
 
-for i in $( seq 10 )
+for i in $( seq 3 )
 do
     echo bar-$i >> foo.txt && git add . && git commit -m "Add line $i" &&
-    git rm-blobs master^..master || exit 1
+    git back || exit 1
 
     objs=$( git list-unpacked commit tree blob )
     if [[ -n $objs ]]
@@ -48,3 +49,17 @@ do
 
 done
 
+for bundle in $( ls -tr /tmp/foo-????????????????????????????????????????.bundle )
+do
+    echo >&2 "Restoring from $bundle ..."
+    cp $bundle /tmp/foo.bundle
+    if [[ ! -d /tmp/foo.restore ]]
+    then
+        cd /tmp
+        git clone foo.bundle foo.restore || exit 1
+        cd foo.restore
+    fi
+    git pull origin master || exit 1
+done
+
+cat foo.txt
