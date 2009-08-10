@@ -12,21 +12,27 @@ require_work_tree
 TAG=archived
 set_reflog_action "$TAG"
 
-revlist=$TAG..master
-## If I want to take an arg
-# revlist=$1
+if [[ -n $( git tag -l $TAG ) ]]
+then
+    revlist=$TAG..master
+else
+    revlist=master
+fi
 
-pipeline= $( git config --get gitback.pipeline )
+pipeline=$( git config --get gitback.pipeline )
 
 ## Create the bundle since the last archving
-git bundle create -- $revlist |
+echo >&2 "Creating and archiving the bundle..."
+git bundle create - $revlist |
 ## Pipe the bundle into the command given in the arguents to archive
 ## it on the offsite backups
-eval || (
-     die "Failed to upload bundle" )
+eval $pipeline || (
+    die "Failed to upload bundle" )
 
+echo >&2 "Set the tag..."
 git tag -f $TAG master || (
     die "Failed to updagte the archive tag" )
 
-git rm-blobs $revlist || (
+echo >&2 "Remove blobs..."
+git rm-blobs || (
     die "Failed remove blobs from the local store" )
