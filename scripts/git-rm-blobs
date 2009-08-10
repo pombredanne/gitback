@@ -2,7 +2,6 @@
 #
 # Copyright (c) 2009 Ross Patterson
 
-USAGE='<git-rev-list args>...'
 LONG_USAGE='Remove previously backed up, unpacked blobs.  Leave \
 commits, tress and all other objects present in the local repository.
 
@@ -16,8 +15,6 @@ SUBDIRECTORY_OK=Yes
 . $(git --exec-path)/git-sh-setup
 require_work_tree
 
-revlist="$@"
-
 ## Unpack prevous packs to make one pack, a substitute for repacking
 ## since the removed blobs breaks "git repack"
 for pack in $GIT_OBJECT_DIRECTORY/pack/*.pack
@@ -27,7 +24,7 @@ do
         # we need the -r option since the blobs aren't referencable
         # and the pack is technically corrupt
         mv $pack $pack.tmp
-        echo >&2 Unpacking objects...
+        echo >&2 "Unpacking objects..."
         git unpack-objects <$pack.tmp || die "Unpacking failed"
         rm -f $pack.tmp ${pack%.pack}.idx
     fi
@@ -52,7 +49,7 @@ done
 # mv $pack blobs-$hash.idx $GIT_DIR/archive/pack/
 
 ## Manually move objects to the alternate store
-echo >&2 Moving blobs...
+echo >&2 "Moving blobs..."
 blobs=$( git list-unpacked blob )
 for blob in $blobs
 do
@@ -62,7 +59,7 @@ done
 
 ## Manually pack the other objects since removing the blobs breaks
 ## "git repack"
-echo >&2 Packing trees, commits, and tags...
+echo >&2 "Packing trees, commits, and tags..."
 git list-unpacked tree commit tag | git pack-objects pack &&
 mv pack-*.pack pack-*.idx $GIT_OBJECT_DIRECTORY/pack/
 
