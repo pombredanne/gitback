@@ -8,12 +8,22 @@ cd foo &&
 git init --template=/home/xen/src/gitback/templates/rpatterson-filemetadata/ &&
 echo foo > foo.txt && git add . && git commit -m "Add a file" &&
 git rm-blobs master
-git list-objects blob --unpacked
+
+blobs=$(echo blob | git list-objects --unpacked)
+if [[ -n $blobs ]]
+then
+    echo Remaining blobs: $blobs
+fi
 
 while [[ 1 ]]
 do
     echo bar >> foo.txt && git add . && git commit -m "Add a line" &&
     git rm-blobs master^..master
-    git list-objects blob --unpacked
+
+    blobs=$(echo blob | git list-objects --unpacked)
+    if [[ -n $blobs ]]
+    then
+        echo Remaining blobs: $blobs
+    fi
 done
 
