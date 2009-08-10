@@ -15,7 +15,7 @@ then
     echo Remaining blobs: $blobs
 fi
 
-while [[ 1 ]]
+for i in $( seq 10 )
 do
     echo bar >> foo.txt && git add . && git commit -m "Add a line" &&
     git rm-blobs master^..master
