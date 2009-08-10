@@ -45,6 +45,12 @@ do
     mv $GIT_OBJECT_DIRECTORY/${blob:0:2}/${blob:2:38} $GIT_DIR/archive/${blob:0:2}/
 done
 
+## Manually pack the other objects since removing the blobs breaks
+## "git repack"
+echo tree commit tag | git list-objects --unpacked master |
+git pack-objects pack &&
+mv pack-*.pack pack-*.idx $GIT_OBJECT_DIRECTORY/pack/
+
 ## remove the objects form the local store
 ## Since we next remove the alternate that would make the objects
 ## prunable, we have to force pruning now.  The auto expire will leave
