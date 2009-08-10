@@ -56,4 +56,5 @@ git gc || ( die "Garbage collection failed" )
 for blob in $blobs
 do
     rm -f .git/archive/${blob:0:2}/${blob:2:38}
+    rmdir --ignore-fail-on-non-empty .git/archive/${blob:0:2}
 done
