@@ -31,15 +31,15 @@ revlist="$@"
 ## Move the pack to the alternate object store
 # pack=$(ls -d blobs-????????????????????????????????????????.pack)
 # hash=${pack:6:40}
-# mv $pack blobs-$hash.idx .git/archive/pack/
+# mv $pack blobs-$hash.idx $GIT_DIR/archive/pack/
 
 ## Manually move objects to the alternate store
 blobs=$(git-get-blobs --unpacked $revlist)
 for blob in $blobs
 do
-    mkdir -p .git/archive/${blob:0:2}
-    mv .git/objects/${blob:0:2}/${blob:2:38} .git/archive/${blob:0:2}/
-    ## XXX should check if empty dirs left in .git/objects are removed
+    mkdir -p $GIT_DIR/archive/${blob:0:2}
+    mv $GIT_DIR/objects/${blob:0:2}/${blob:2:38} $GIT_DIR/archive/${blob:0:2}/
+    ## XXX should check if empty dirs left in $GIT_DIR/objects are removed
     ## by "git gc"
 done
 
@@ -48,13 +48,13 @@ done
 git gc || ( die "Garbage collection failed" )
 
 ## Remove the pack but leave the index
-# rm -f .git/archive/pack/$pack
+# rm -f $GIT_DIR/archive/pack/$pack
 
 ## Remove the successfully archived objects from the alternate store
 ## At this point they're no longer available to the repo but safely
 ## backed up in the bundle
 for blob in $blobs
 do
-    rm -f .git/archive/${blob:0:2}/${blob:2:38}
-    rmdir --ignore-fail-on-non-empty .git/archive/${blob:0:2}
+    rm -f $GIT_DIR/archive/${blob:0:2}/${blob:2:38}
+    rmdir --ignore-fail-on-non-empty $GIT_DIR/archive/${blob:0:2}
 done
