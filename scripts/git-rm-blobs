@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# Copyright (c) 2009 Ross Patterson
+
+USAGE='<git-rev-list args>...'
+LONG_USAGE='Remove previously backed up, unpacked blobs.  Leave \
+commits, tress and all other objects present in the local repository.
+
+WARNING: This script destroys repository objects
+
+This script removes blobs from your local object store.  It is \
+intended to be used after the repository has *already* been backed \
+up to conserve space locally.  If you run this before backing up \
+youre repository you will permanently lose data.'
+SUBDIRECTORY_OK=Yes
+. $(git --exec-path)/git-sh-setup
+require_work_tree
+
+$revlist = $"@"
+
+## Remove the blobs from the local store
+## Two implementations here.  One uses packs and leaves the pack index
+## around.  The other simple moves the blobs directly and then deletes
+## them after they're pruned from the original store.  Since we throw
+## the pack away, the pack approach involes some wasted time.  But if
+## git can make some use of the pack index without the pack, then it
+## may be worth it.  Otherwise just the the blob moving approach.
+
+## Use a pack to move objects to the alternate store
+#git-get-blobs --unpacked $revlist | git pack-objects blobs
+## Move the pack to the alternate object store
+# pack=$(ls -d blobs-????????????????????????????????????????.pack)
+# hash=${pack:6:40}
+# mv $pack blobs-$hash.idx .git/archive/pack/
+
+## Manually move objects to the alternate store
+$blobs = $(git-get-blobs --unpacked $revlist)
+for blob in $(git-get-blobs --unpacked $revlist)
+do
+    mkdir -p .git/archive/${blob:0:2}
+    mv .git/objects/${blob:0:2}/${blob:2:38} .git/archive/${blob:0:2}/
+    ## XXX should check if empty dirs left in .git/objects are removed
+    ## by "git gc"
+done
+
+## Pack the main object store to remove the objects in the pack form
+## the local store
+git gc || ( die "Garbage collection failed" )
+
+## Remove the pack but leave the index
+# rm -f .git/archive/pack/$pack
+
+## Remove the successfully archived objects from the alternate store
+## At this point they're no longer available to the repo but safely
+## backed up in the bundle
+for blob in $blobs
+do
+    rm -f .git/archive/${blob:0:2}/${blob:2:38}
+done

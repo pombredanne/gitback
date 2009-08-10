@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Copyright (c) 2009 Ross Patterson
+
+USAGE='[--unpacked] <git-rev-list args>...'
+LONG_USAGE='List SHA1 hashes for blobs in the object store.'
+SUBDIRECTORY_OK=Yes
+. $(git --exec-path)/git-sh-setup
+
+for rev in $(
+    git rev-list --objects "$@" |
+    grep -o '^[[:alnum:]]\{40\}' )
+do
+    if [[ $(git cat-file -t $rev) == blob ]]
+    then echo $rev
+    fi
+done
