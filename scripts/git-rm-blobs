@@ -18,6 +18,21 @@ require_work_tree
 
 revlist="$@"
 
+## Unpack prevous packs to make one pack, a substitute for repacking
+## since the removed blobs breaks "git repack"
+for pack in $GIT_OBJECT_DIRECTORY/pack/*.pack
+do
+    if [[ -f $pack ]]
+    then
+        # we need the -r option since the blobs aren't referencable
+        # and the pack is technically corrupt
+        mv $pack $pack.tmp
+        echo >&2 Unpacking objects...
+        git unpack-objects <$pack.tmp || die "Unpacking failed"
+        rm -f $pack.tmp ${pack%.pack}.idx
+    fi
+done
+
 ## Remove the blobs from the local store
 ## Two implementations here.  One uses packs and leaves the pack index
 ## around.  The other simple moves the blobs directly and then deletes
@@ -48,8 +63,8 @@ done
 
 ## Manually pack the other objects since removing the blobs breaks
 ## "git repack"
-echo >&2 Packing tees, commits, and tags...
-echo tree commit tag | git list-objects --unpacked $revlist |
+echo >&2 Packing trees, commits, and tags...
+echo tree commit tag | git list-objects --unpacked master |
 git pack-objects pack &&
 mv pack-*.pack pack-*.idx $GIT_OBJECT_DIRECTORY/pack/
 

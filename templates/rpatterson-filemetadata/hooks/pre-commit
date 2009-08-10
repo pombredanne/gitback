@@ -2,7 +2,7 @@
 
 # Record file metadata
 SUBDIRECTORY_OK=1 . git-sh-setup
-#git ls-files | filemetadata-export -d $GIT_DIR/.. >$GIT_DIR/../.metadata
+git ls-files | filemetadata-export -d $GIT_DIR/.. >$GIT_DIR/../.metadata
 
 # Add new files, obeys ignored files
 git-add -v .
