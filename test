@@ -28,7 +28,12 @@ done
 
 for i in $( seq $1 )
 do
-    dd if=/dev/urandom count=2048 of=bar-$i.txt && git add . && echo "Add file $i" | git back-commit &&
+    for j in $( seq $2 )
+    do
+        dd if=/dev/urandom count=2 | base64 >>bar-$j.txt
+    done
+
+    git add . && echo "Append to file $i" | git back-commit &&
     git back || exit 1
 
     objs=$( git list-unpacked back-commit tree blob )
@@ -46,9 +51,13 @@ do
             exit 1
         fi
     done
-
 done
-git fsck
+if [[ $(git fsck >&1 | wc -l ) != $(( $1 + 2 )) ]]
+then
+    # XXX also check for anything other than "^missing blob "
+    echo "Wrong number of fsck lines"
+    exit 1
+fi
 
 for bundle in $( ls -tr /tmp/foo-????????????????????????????????????????.bundle )
 do
@@ -67,3 +76,4 @@ cat foo.txt
 ls -l bar-*.txt
 git fsck
 du -s /tmp/foo /tmp/foo.restore
+du -sc /tmp/foo-*.bundle
