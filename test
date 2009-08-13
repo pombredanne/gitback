@@ -73,7 +73,7 @@ do
 done
 
 cat foo.txt
-ls -l bar-*.txt
+ls -lt bar-*.txt
 git fsck
 du -s /tmp/foo /tmp/foo.restore
-du -sc /tmp/foo-*.bundle
+ls -t /tmp/foo-*.bundle | xargs du -s
