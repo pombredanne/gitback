@@ -32,7 +32,3 @@ eval $pipeline || (
 echo >&2 "Set the tag..."
 git tag -f $TAG master || (
     die "Failed to updagte the archive tag" )
-
-echo >&2 "Remove blobs..."
-git rm-blobs || (
-    die "Failed remove blobs from the local store" )

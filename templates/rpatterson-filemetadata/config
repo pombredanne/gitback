@@ -1,5 +1,2 @@
-[gc]
-	auto = 0
-	autopacklimit = 0
 [gitback]
         pipeline = gpg --encrypt --default-recipient-self | splitpipe 20971520 imapput imap://LOGIN:PASSWORD@HOST[:PORT]/[FOLDER_PATH]?NAME-$(git rev-parse HEAD).bundle.gpg-%s.vol
