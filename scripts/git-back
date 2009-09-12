@@ -31,4 +31,4 @@ eval $pipeline || (
 
 echo >&2 "Set the tag..."
 git tag -f $TAG master || (
-    die "Failed to updagte the archive tag" )
+    die "Failed to update the archive tag" )
