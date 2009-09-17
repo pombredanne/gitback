@@ -22,6 +22,5 @@ setup(name='gitback',
       # -*- Entry points: -*-
       """,
       scripts=['scripts/git-back',
-               'scripts/git-get-blobs',
                'scripts/git-rm-blobs'],
       )

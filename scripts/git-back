@@ -12,7 +12,7 @@ require_work_tree
 TAG=archived
 set_reflog_action "$TAG"
 
-if [[ -n $( git tag -l $TAG ) ]]
+if [ $( git tag -l $TAG ) ]
 then
     revlist=$TAG..master
 else
