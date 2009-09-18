@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Copyright (c) 2009 Ross Patterson
+
+USAGE=''
+LONG_USAGE='Restore the repository from the pipelines configured \
+in the gitback.list and gitback.get git-config options'
+SUBDIRECTORY_OK=Yes
+. $(git --exec-path)/git-sh-setup
+
+list=$( git config --get gitback.list )
+get=$( git config --get gitback.get )
+
+for bundle in $( eval $list )
+do
+    eval ${get/\$\{bundle\}/$bundle} >bundle &&
+    git pull bundle master
+done
+rm bundle
+
+    
