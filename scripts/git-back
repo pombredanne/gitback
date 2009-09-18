@@ -3,7 +3,7 @@
 # Copyright (c) 2009 Ross Patterson
 
 USAGE=''
-LONG_USAGE='Backup the repository using to the pipeline configured \
+LONG_USAGE='Backup the repository to the pipeline configured \
 in the gitback.pipeline git-config option'
 SUBDIRECTORY_OK=Yes
 . $(git --exec-path)/git-sh-setup
